@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+
+	 <package name="adminuser" extends="struts-default" namespace="/">
+		<action name="verifyCode" class="com.pm.action.LoginAction">
+			<!-- <result>/admin/main.jsp</result>
+			<result name="ERROR">admin/error.jsp</result> -->
+		</action>
+		<action name="Login" class="com.pm.action.LoginAction" method="Login">
+			<result>/admin/main.jsp</result>
+			<result name="error">admin/login.jsp</result>
+		</action>
+		<action name="findAdminById" class="com.pm.action.AdminUserAction" method="findAdminById">
+			<result>/admin/adminUsers_edit.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="updateAdminUsers" class="com.pm.action.AdminUserAction" method="updateAdminUsers">
+			<result>/admin/adminrole_list.jsp</result>
+		</action>
+		<action name="findAdminAll" class="com.pm.action.AdminUserAction" method="findAdminAll">
+			<result>/admin/adminrole_list.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findAdminUsersByName" class="com.pm.action.AdminUserAction" method="findAdminUsersByName">
+			<result>/admin/adminrole_list.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findAdminPageList" class="com.pm.action.AdminUserAction" method="findAdminPageList">
+			<result>/admin/adminrole_list.jsp</result>
+		</action>
+		<action name="deleteAdminUser" class="com.pm.action.AdminUserAction" method="deleteAdminUser">
+			<result>/admin/adminrole_list.jsp</result>
+		</action>
+		<action name="findAll" class="com.pm.action.AdminAccessAction" method="findAllAdminAccess">
+			<result>admin/admin_add.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="saveAdminUser" class="com.pm.action.AdminUserAction" method="saveAdminUser">
+			<result>admin/adminrole_list.jsp</result>
+		</action>
+	</package> 
+	
+	<package name="log_reg" extends="struts-default" namespace="/">
+		<action name="register" class="com.pm.action.UserAction">
+			<result>/login_reg.jsp</result>
+			<result name="error">/login_reg.jsp</result>
+		</action>
+		<action name="login" class="com.pm.action.UserAction" method="login">
+			<result name="success">/home.jsp</result>
+			<result name="error">/login_reg.jsp</result>
+		</action>
+	</package>
+	
+	<package name="user" extends="struts-default" namespace="/admin">
+		<action name="register" class="com.pm.action.UserAction">
+			<result>/login_reg.jsp</result>
+			<result name="error">/login_reg.jsp</result>
+		</action>
+		
+		<action name="complain" class="com.pm.action.ComplainAction">
+			<result name="success">/home.jsp</result>
+			<result name="input">/home.jsp</result>
+		</action>
+		<action name="repair" class="com.pm.action.RepairAction">
+			<result name="success">/home.jsp</result>
+		</action>
+		<action name="findAll" class="com.pm.action.UserAction" method="findAll">
+			<result>users_list.jsp</result>
+			<result name="error">error.jsp</result>
+		</action>
+		<action name="findUsersPageList" class="com.pm.action.UserAction" method="findUsersPageList">
+			<result name="success">users_list.jsp</result>
+		</action>
+		<action name="deleteUser" class="com.pm.action.UserAction" method="deleteUser">
+			<result>users_list.jsp</result>
+		</action>
+		<action name="updateUsers" class="com.pm.action.UserAction" method="updateUsers">
+			<result>users_list.jsp</result>
+		</action>
+		<action name="findById" class="com.pm.action.UserAction" method="queryById">
+			<result name="success">users_edit.jsp</result>
+			<result name="error">error.jsp</result>
+		</action>
+		<action name="findUsersByName" class="com.pm.action.UserAction" method="findUsersByName">
+			<result>users_list.jsp</result>
+			<result name="error">error.jsp</result>
+		</action>
+	</package>
+	
+	<package name="json" extends="json-default" namespace="/">
+		<action name="findAllAdminUsers" class="com.pm.action.AdminUserAction"
+			method="findAllAdminUsersId">
+			<result type="json">
+				<param name="root">adminusers</param>
+			</result>
+		</action>
+
+		<action name="findAllGoods" class="com.pm.action.GoodsAction"
+			method="findAllGoods">
+			<result type="json">
+				<param name="root">goods</param>
+			</result>
+		</action>
+			<action name="findAllBuilding2" class="com.pm.action.BuildingAction"
+			method="findAllBuilding2">
+			<result type="json">
+				<param name="root">buildings</param>
+			</result>
+		</action>
+		<action name="news-*"  class="com.pm.action.NewsAction" method="{1}">
+			<result name="list">newslist.jsp</result>
+		</action>
+	</package>
+	
+	
+	<package name="news" extends="struts-default" namespace="/">
+		<action name="findAllNews" class="com.pm.action.NewsAction" method="findAllNews">
+			<result>admin/news_list.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="updateNews" class="com.pm.action.NewsAction" method="updateNews">
+			<result>admin/news_list.jsp</result>
+			<result name="error">news/error.jsp</result>
+		</action>
+		<action name="deleteNews" class="com.pm.action.NewsAction" method="deleteNews">
+			<result>admin/news_list.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="saveNews" class="com.pm.action.NewsAction" method="saveNews">
+			<result>admin/news_list.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findByNewsId" class="com.pm.action.NewsAction" method="findByNewsId">
+			<result>admin/news_edit.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findPageList" class="com.pm.action.NewsAction" method="findPageList">
+			<result name="newsList">admin/news_list.jsp</result>
+		</action>
+		<action name="findNewsByName" class="com.pm.action.NewsAction" method="findNewsByName">
+			<result>admin/news_list.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+	</package>
+	
+	<package name="access" extends="struts-default" namespace="/">
+		<action name="findAllAdminAccess" class="com.pm.action.AdminAccessAction" method="findAllAdminAccess">
+			<result>admin/access_list.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="deleteAccess" class="com.pm.action.AdminAccessAction" method="deleteAccess">
+			<result>admin/access_list.jsp</result>
+		</action>
+		<action name="updateAccess" class="com.pm.action.AdminAccessAction" method="updateAccess">
+			<result>admin/access_list.jsp</result>
+		</action>
+		<action name="findByAccessId" class="com.pm.action.AdminAccessAction" method="findByAccessId">
+			<result>admin/access_list.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="saveAccess" class="com.pm.action.AdminAccessAction" method="saveAccess">
+			<result>admin/access_list.jsp</result>
+		</action>
+		<action name="findAccessPageList" class="com.pm.action.AdminAccessAction" method="findAccessPageList">
+			<result>admin/access_list.jsp</result>
+		</action>
+	</package>
+	
+	
+	<package name="building" extends="struts-default" namespace="/">
+	   <action name="registerBuilding" class="com.pm.action.BuildingAction">
+			<result>admin/Building_right.jsp</result>
+		</action>
+		<action name="findAllBuilding" class="com.pm.action.BuildingAction" method="findAllBuilding">
+			<result>admin/Building_right.jsp</result>
+		</action> 
+		<action name="findBuildingPageList" class="com.pm.action.BuildingAction" method="findBuildingPageList">
+			<result>admin/Building_right.jsp</result>
+		</action>
+		<action name="deleteBuilding" class="com.pm.action.BuildingAction" method="delete">
+			<result>admin/Building_right.jsp</result>
+		</action>
+		<action name="findByIdBuilding" class="com.pm.action.BuildingAction" method="findById">
+			<result>admin/Building_upd.jsp</result>
+		</action>
+		<action name="updateBuilding" class="com.pm.action.BuildingAction" method="update">
+			<result>admin/Building_right.jsp</result>
+		</action>
+	  </package>
+	  
+	  <package name="Server_type" extends="struts-default" namespace="/">
+		<action name="AddServer_type" class="com.pm.action.Server_typeAction">
+			<result>/admin/AdminServerEditor.jsp</result>
+			<result name="error">/admin/AdminServerAdd.jsp</result>
+		</action>
+		<action name="deleteServer_type" class="com.pm.action.Server_typeAction"
+			method="delete">
+			<result>/admin/AdminServerEditor.jsp</result>
+		</action>
+		<action name="findAllServer_type" class="com.pm.action.Server_typeAction"
+			method="findAllserver_types">
+			<result>/admin/AdminServerEditor.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findServerTypePageList" class="com.pm.action.Server_typeAction"
+			method="findServerTypePageList">
+			<result>/admin/AdminServerEditor.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findTypeByName" class="com.pm.action.Server_typeAction"
+			method="findTypeByName">
+			<result>/admin/AdminServerEditor.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="updateServer_type" class="com.pm.action.Server_typeAction"
+			method="update">
+			<result>/admin/AdminServerEditor.jsp</result>
+		</action>
+	</package>
+	
+	
+	<package name="Salary" extends="struts-default" namespace="/">
+		<action name="SalaryAction" class="com.pm.action.SalaryAction"
+			method="findAllSalary">
+			<result>admin/Salary.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findSalaryPageList" class="com.pm.action.SalaryAction"
+			method="findSalaryPageList">
+			<result>admin/Salary.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findAdminName" class="com.pm.action.SalaryAction"
+			method="findAdminName">
+			<result>admin/saveSalary.jsp</result>
+		</action>
+		<action name="deleteSalary" class="com.pm.action.SalaryAction"
+			method="delete">
+			<result>admin/Salary.jsp</result>
+		</action>
+		<action name="saveSalary" class="com.pm.action.SalaryAction"
+			method="save">
+			<result>admin/Salary.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="updateSalary" class="com.pm.action.SalaryAction"
+			method="update">
+			<result name="success">admin/Salary.jsp</result>
+		</action>
+		<action name="findById" class="com.pm.action.SalaryAction"
+			method="findById">
+			<result>admin/updateSalary.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findAllShowRepair" class="com.pm.action.ShowRepairAction" method="findAllShowRepair">
+			<result>/admin/repair_right.jsp</result>
+		</action>
+		<action name="findAllDetail" class="com.pm.action.DetailAction" method="findAllDetail">
+			<result>/admin/repair_detail.jsp</result>
+		</action>
+		<action name="repairupdate" class="com.pm.action.RepairAction" method="repairupdate">
+			<result name="login">/admin/repair_update.jsp</result>
+		</action>
+		<action name="xianshi" class="com.pm.action.RepairAction" method="xianshi">
+			<result name="input">/admin/repair_update.jsp</result>
+		</action>
+	</package>
+	
+	<package name="goods" extends="struts-default" namespace="/stock">
+		<action name="saveGoods" class="com.pm.action.GoodsAction" >
+			<result>/admin/stockright.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findAllGoods" class="com.pm.action.GoodsAction" method="findAllGoods2">
+			<result>/admin/stockright.jsp</result>
+			<result name="ERROR">admin/error.jsp</result>
+		</action>
+		<action name="findTypeByName" class="com.pm.action.GoodsAction" method="findTypeByName">
+			<result>/admin/stockright.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="deleteGoods" class="com.pm.action.GoodsAction" method="deleteGoods">
+			<result>/admin/stockright.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="updateGoods" class="com.pm.action.GoodsAction" method="updateGoods">
+			<result>/admin/stockright.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findByIdGoods" class="com.pm.action.GoodsAction" method="findByIdGoods">
+			<result>/admin/stockupdate.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		
+		<action name="findByIdGoodsgouwu" class="com.pm.action.GoodsAction" method="findByIdGoods">
+			<result>/admin/gouwuadd.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findAllGoodsgouwu" class="com.pm.action.GoodsAction" method="findAllGoods2">
+			<result>/admin/gouwuright.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="updateGoodsgouwu" class="com.pm.action.GoodsAction" method="updateGoodsgouwu">
+			<result>/admin/stockright.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>
+		<action name="findAllUpkeep" class="com.pm.action.UpkeepAction" method="findAllUpkeep">
+			<result>/admin/upkeepright.jsp</result>
+			<result name="error">admin/error.jsp</result>
+		</action>	
+	</package>
+</struts>    

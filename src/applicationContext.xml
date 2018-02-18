@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+ <property name="configLocation">
+ 	<value>classpath:hibernate.cfg.xml</value>
+ </property>
+</bean>
+<!-- 事务管理器 相当于切面 -->
+ <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+<!--<bean id="transactionManager" class="org.springframework.orm.hibernate3.SpringTransactionFactory"> -->
+ <property name="sessionFactory" ref="sessionFactory" />
+</bean>
+<!-- 事务管理的具体实现 -->
+<aop:config>
+	<aop:pointcut id="productServiceMethods" expression="execution(* com.pm.service.impl.*.*(..))" />
+	<aop:advisor advice-ref="txAdvice" pointcut-ref="productServiceMethods"/>
+</aop:config>
+<!-- 事务管理是Hibernate做的，至于为什么在Spring容器中配置是因为SessionFactory或者HibernateTempl
+	ate等都交与Spring容器管理了，Spring为Hibernate提供了事务管理的接口。
+		
+		在标准的ssh开发里，spring是各层之间的管理者，说的具体点说，spring实现了数据层，逻辑层和控制层间的
+		松耦合，这样一来，通过spring的aop机制，对sevice层的事务作精确的切面，可以很方便的实现事务管理的业
+		务需求，并且若使用配置文件的方式的的话，完全不侵入代码，
+		这不是一件让人愉悦的事么。
+		 -->
+<!-- 对象事物的具体实现 -->
+<tx:advice id="txAdvice" transaction-manager="transactionManager">
+<!-- 实现的方法 -->
+	<tx:attributes>
+		<tx:method name="Login" propagation="REQUIRED"/> <!-- 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。这是最常见的选择。 -->
+		<tx:method name="registe" propagation="REQUIRED"/>
+		<tx:method name="save*" propagation="REQUIRED"/>
+		<tx:method name="find*" propagation="REQUIRED"/>
+		<tx:method name="update*" propagation="REQUIRED"/>
+		<tx:method name="del*" propagation="REQUIRED"/>
+		<tx:method name="someOtherBusinessMethod" propagation="REQUIRES_NEW"/> <!-- 每次都新建事务，如果当前存在事务，把当前事务挂起。 -->
+		<!-- supports 有事物就用，没有就不用 -->
+		<tx:method name="*" propagation="SUPPORTS" read-only="true"></tx:method>
+	</tx:attributes>
+	<!-- 处理并发操作 -->
+</tx:advice>
+
+	<!-- 登录的注入 -->
+	<bean id="aaDao" class="com.pm.dao.impl.AdminAccessDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="adminUserDao" class="com.pm.dao.impl.AdminUserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="adminUserService" class="com.pm.service.impl.AdminUserServiceImpl">
+		<property name="adminUserDao" ref="adminUserDao"></property>
+	</bean>
+	<bean id="aacService" class="com.pm.service.impl.AdminAccessServiceImpl">
+		<property name="aaDao" ref="aaDao"></property>
+	</bean>
+	<bean id="adAction" class="com.pm.action.AdminUserAction">
+		<property name="aacService" ref="aacService"></property>
+	</bean>
+	<bean id="adminUserAction" class="com.pm.action.AdminUserAction">
+		<property name="adminUserService" ref="adminUserService"></property>
+	</bean>
+	
+	<bean id="adminAction" class="com.pm.action.LoginAction">
+		<property name="adminUserService" ref="adminUserService"></property>
+	</bean>
+	<bean id="adminAcceAction" class="com.pm.action.LoginAction">
+		<property name="aacService" ref="aacService"></property>
+	</bean>
+	
+	<!-- 权限的注入 -->
+	<bean id="accessAction" class="com.pm.action.AdminAccessAction">
+		<property name="aacService" ref="aacService"></property>
+	</bean>
+	
+	<!-- 住户的注入 -->
+	<bean id="userDao" class="com.pm.dao.impl.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="userService" class="com.pm.service.impl.UserServiceImpl">
+		<property name="userDao" ref="userDao"></property>
+	</bean>
+	<bean id="userAction" class="com.pm.action.UserAction">
+		<property name="userService" ref="userService"></property>
+	</bean>
+	
+	<!-- 新闻的注入 -->
+	<bean id="newsDao" class="com.pm.dao.impl.NewsDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="newsService" class="com.pm.service.impl.NewsServiceImpl">
+		<property name="newsDao" ref="newsDao"></property>
+	</bean>
+	<bean id="auss" class="com.pm.service.impl.AdminUserServiceImpl">
+		<property name="adminUserDao" ref="adminUserDao"></property>
+	</bean>
+	<bean id="newsAction" class="com.pm.action.NewsAction">
+		<property name="newsService" ref="newsService"></property>
+	</bean>
+	<bean id="neAction" class="com.pm.action.NewsAction">
+		<property name="auss" ref="auss"></property>
+	</bean>
+	
+	<!-- 服务类型的注入 -->
+	<bean id="server_typeDao" class="com.pm.dao.impl.Server_typeDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="server_typeService" class="com.pm.service.impl.Server_typeServiceImpl">
+		<property name="server_typeDao" ref="server_typeDao"></property>
+	</bean>
+	<bean id="Server_typeAction" class="com.pm.action.Server_typeAction">
+		<property name="server_typeService" ref="server_typeService"></property>
+	</bean>
+	
+	<!-- 物品 -->
+	<bean id="goodsDao" class="com.pm.dao.impl.GoodsDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="goo" class="com.pm.service.impl.GoodsServiceImpl">
+		<property name="goodsDao" ref="goodsDao"></property>
+	</bean>
+	<bean id="GoodsAction" class="com.pm.action.GoodsAction">
+		<property name="goo" ref="goo"></property>
+	</bean>
+	
+	<!-- 明细的注入 -->
+	<bean id="detailDao" class="com.pm.dao.impl.DetailDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="detailService" class="com.pm.service.impl.DetailServiceImpl">
+		<property name="detailDao" ref="detailDao" />
+	</bean>
+	<bean id="detailAction" class="com.pm.action.DetailAction">
+		<property name="detailService" ref="detailService" />
+	</bean>
+	
+	<bean id="repAction" class="com.pm.action.DetailAction">
+		<property name="server_typeService" ref="server_typeService" />
+	</bean>
+	<bean id="repaAction" class="com.pm.action.DetailAction">
+		<property name="goo" ref="goo" />
+	</bean>
+	
+	<!-- 薪资注入 -->
+	<bean id="salaryDao" class="com.pm.dao.impl.SalaryDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="salaryService" class="com.pm.service.impl.SalaryServiceImpl">
+		<property name="salaryDao" ref="salaryDao" />
+	</bean>
+	<bean id="salaryAction" class="com.pm.action.SalaryAction">
+		<property name="salaryService" ref="salaryService" />
+	</bean>
+	<bean id="salaAction" class="com.pm.action.SalaryAction">
+		<property name="adminUserService" ref="adminUserService" />
+	</bean>
+	
+	<!-- 投诉注入 -->
+	<bean id="complainDao" class="com.pm.dao.impl.ComplainDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="complainService" class="com.pm.service.impl.ComplainServiceImpl">
+		<property name="complainDao" ref="complainDao"></property>
+	</bean>
+	<bean id="complainAction" class="com.pm.action.ComplainAction">
+		<property name="complainService" ref="complainService"></property>
+	</bean>
+	
+	<!-- 报修注入 -->
+	
+	<bean id="repairDao" class="com.pm.dao.impl.RepairDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="repairService" class="com.pm.service.impl.RepairServiceImpl">
+		<property name="repairDao" ref="repairDao"></property>
+	</bean>
+	<bean id="repairAction" class="com.pm.action.RepairAction">
+		<property name="repairService" ref="repairService"></property>
+	</bean>
+	
+	<!-- 楼栋的注入 -->
+	
+	<bean id="buildingDao" class="com.pm.dao.impl.BuildingDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="buildingService" class="com.pm.service.impl.BuildingServiceImpl">
+		<property name="buildingDao" ref="buildingDao"></property>
+	</bean>
+	<bean id="buildingAction" class="com.pm.action.BuildingAction">
+		<property name="buildingService" ref="buildingService"></property>
+	</bean>
+	
+</beans>
